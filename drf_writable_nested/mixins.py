@@ -404,6 +404,8 @@ class UniqueFieldsMixin(serializers.ModelSerializer):
         for field_name in self._unique_fields:
             if self.partial and field_name not in validated_data:
                 continue
+            if field_name in validated_data and validated_data[field_name] is None and self.fields[field_name].allow_null:
+                continue
             unique_validator = UniqueValidator(self.Meta.model.objects.all())
             try:
                 # `set_context` removed on DRF >= 3.11, pass in via __call__ instead
